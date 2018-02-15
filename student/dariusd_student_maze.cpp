@@ -19,11 +19,7 @@
 
 // OK to change below this point
 #include "student.h"
-
-void upBump(bool bumped);
-void leftBump(bool bumped);
-void downBump(bool bumped);
-void rightBump(bool bumped);
+#include "dariusd_student_turtle.h"
 
 typedef enum {
     up,
@@ -70,6 +66,7 @@ bool moveTurtle(QPointF & pos_) {
       place.ya = pos_.y();
       place.xb = pos_.x();
       place.yb = pos_.y();
+      ROS_INFO("Move");
 
       switch (d) {
       case right:
@@ -94,33 +91,11 @@ bool moveTurtle(QPointF & pos_) {
       }
 
         m.bumped = bumped(place.xa, place.ya, place.xb, place.yb);
+        resultedInBump(m.bumped);
         m.finished = atend(pos_.x(), pos_.y());
 
-        /*The switch statement below keeps track of the turtles current orientation and calls the correct function to check if
-          it bumped into a wall. If the turtle does bump into a wall the called funtion turns it to a different orientation*/
-
-        switch (d) {
-        case up:
-          upBump(m.bumped);
-          break;
-
-        case left:
-          leftBump(m.bumped);
-              break;
-
-        case down:
-          downBump(m.bumped);
-          break;
-
-        case right:
-          rightBump(m.bumped);
-          break;
-
-        default:
-          ROS_ERROR("Directional error");
-          break;
-        }
-
+        d = (direction)turtleAction(d, s);
+        s = (state)getState();
         m.stepAllowed = (s == 2);
         m.moving = true;
 
@@ -128,6 +103,7 @@ bool moveTurtle(QPointF & pos_) {
         /*If there is a clear space and the turtle is not finished, this function moves
           it forward one step.*/
         if (m.stepAllowed == true && m.finished == false) {
+            ROS_INFO("Step");
             switch (d) {
             case left:
                  pos_.setY(pos_.y() + 1);
@@ -157,119 +133,7 @@ bool moveTurtle(QPointF & pos_) {
     }
     // display the turtle -- must call this function before returning!
     displayTurtle(d);
+    ROS_INFO("Display");
     return (m.finished);
 }
-/*The functions upBump() - rightBump() each change the orientation of the turtle respective to its orientation
-  when the funtion was called. Each function changes the orientation so the turtle is using the right-hand rule to 
-  solve the maze*/
-void upBump(bool bumped){
-  switch(s){
-    case clearSpace:
-       d = right;
-       s = checkSpace;
-       break;
-    case hitWall:
-      if(bumped){
-        d = left;
-        s = hitWall;
-      }else{
-        s = clearSpace;
-      }
-      break;
-    case checkSpace:
-      if(bumped){
-        d = left;
-        s = hitWall;
-      }else{
-        s = clearSpace;
-      }
-      break;
-    default:
-         ROS_ERROR("Up case: undefined state");
-         break;
-  }
-}
 
-void leftBump(bool bumped){
-  switch(s){
-    case clearSpace:
-       d = up;
-       s = checkSpace;
-       break;
-    case hitWall:
-       if(bumped) {
-        d = down;
-        s = hitWall;
-      }else{
-        s = clearSpace;
-      }
-      break;
-    case checkSpace:
-       if(bumped) {
-        d = down;
-        s = hitWall;
-      }else{
-        s = clearSpace;
-      }
-      break;
-    default:
-       ROS_ERROR("Left case: undefined state");
-       break;
-  }
-}
-
-void downBump(bool bumped){
-  switch(s){
-    case clearSpace:
-       d = left;
-       s = checkSpace;
-       break;
-    case hitWall:
-      if (bumped) {
-        d = right;
-        s = hitWall;
-      }else{
-        s = clearSpace;
-      }
-      break;
-    case checkSpace:
-       if (bumped) {
-        d = right;
-        s = hitWall;
-      }else{
-        s = clearSpace;
-      }
-      break;
-    default:
-       ROS_ERROR("Down case: undefined state");
-       break;
-  }
-}
-
-void rightBump(bool bumped){
-  switch(s){
-    case clearSpace:
-       d = down;
-       s = checkSpace;
-       break;
-    case hitWall:
-      if(bumped) {
-        d = up;
-        s = hitWall;
-      }else{
-        s = clearSpace;
-      }
-      break;
-    case checkSpace:
-       if(bumped) {
-        d = up;
-        s = hitWall;
-      }else{
-        s = clearSpace;
-      }
-      break;
-    default:
-       ROS_ERROR("Right case: undefined state");
-       break;
-  }
-}
