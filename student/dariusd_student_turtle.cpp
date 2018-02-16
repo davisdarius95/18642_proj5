@@ -33,9 +33,13 @@ typedef enum {
 }state;
 
 static bool b;
-
 static direction d;
 static state s;
+static int x = 11;
+static int y = 11;
+static int v = 0;
+static int temp = 0;
+static int visits[23][23] = {0};
 
 /*
  * Function called by student_maze.cpp to return a turtle action
@@ -84,18 +88,58 @@ void resultedInBump(bool bump) {
 	b = bump;
 }
 
+int incrementVisits(int dir){
+    switch((direction)dir){
+        case up:
+        if (x>0){
+            x--;
+            visits[x][y]++;
+        }else{
+            break;
+        }
+            break;
+        case left:
+        if (y>0){
+            y--;
+            visits[x][y]++;
+        }else{
+            break;
+        }
+            break;
+        case down:
+        if (x<22){
+            x++;
+            visits[x][y]++;
+        }else{
+            break;
+        }
+            break;
+        case right:
+        if (y<22){
+            y++;
+            visits[x][y]++;
+        }else{
+            break;
+        }
+            break;
+        default:
+            ROS_ERROR("Array incrementation error");
+            break;
+    }
+    v = visits[x][y];
+    return v;
+}
+
 /*The functions upBump() - rightBump() each change the orientation of the turtle respective to its orientation
   when the funtion was called. Each function changes the orientation so the turtle is using the right-hand rule to 
   solve the maze*/
 int upBump(bool bumped){
   switch(s){
     case clearSpace:
-       ROS_INFO("UB, state: clearSpace, Direction: right");
        d = right;
        s = checkSpace;
        break;
     case hitWall:
-      ROS_INFO("UB, state: hitWall, Direction: left");
       if(bumped){
         d = left;
         s = hitWall;
@@ -104,7 +148,6 @@ int upBump(bool bumped){
       }
       break;
     case checkSpace:
-      ROS_INFO("UB, state: checkSpace, Direction: left");
       if(bumped){
         d = left;
         s = hitWall;
@@ -122,12 +165,10 @@ int upBump(bool bumped){
 int leftBump(bool bumped){
   switch(s){
     case clearSpace:
-       ROS_INFO("LB, state: clearSpace, Direction: up");
        d = up;
        s = checkSpace;
        break;
     case hitWall:
-       ROS_INFO("LB, state: hitWall, Direction: down");
        if(bumped) {
         d = down;
         s = hitWall;
@@ -136,7 +177,6 @@ int leftBump(bool bumped){
       }
       break;
     case checkSpace:
-       ROS_INFO("LB, state: checkSpace, Direction: down");
        if(bumped) {
         d = down;
         s = hitWall;
@@ -154,12 +194,10 @@ int leftBump(bool bumped){
 int downBump(bool bumped){
   switch(s){
     case clearSpace:
-       ROS_INFO("DB, state: clearSpace, Direction: left");
        d = left;
        s = checkSpace;
        break;
     case hitWall:
-      ROS_INFO("DB, state: hitWall, Direction: right");
       if (bumped) {
         d = right;
         s = hitWall;
@@ -168,7 +206,6 @@ int downBump(bool bumped){
       }
       break;
     case checkSpace:
-       ROS_INFO("DB, state: checkSpace, Direction: right");
        if (bumped) {
         d = right;
         s = hitWall;
@@ -186,12 +223,10 @@ int downBump(bool bumped){
 int rightBump(bool bumped){
   switch(s){
     case clearSpace:
-       ROS_INFO("RB, state: clearSpace, Direction: down");
        d = down;
        s = checkSpace;
        break;
     case hitWall:
-      ROS_INFO("RB, state: hitWall, Direction: up");
       if(bumped) {
         d = up;
         s = hitWall;
@@ -200,7 +235,6 @@ int rightBump(bool bumped){
       }
       break;
     case checkSpace:
-       ROS_INFO("RB, state: checkSpace, Direction: up");
        if(bumped) {
         d = up;
         s = hitWall;

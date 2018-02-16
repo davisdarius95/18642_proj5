@@ -48,6 +48,7 @@ typedef struct miscellaneous {
     bool bumped;
     int countdown;
     const int TIMEOUT = 17; // bigger number slows down simulation so you can see what's happening
+    int numVisits = 0;
 }misc;
 
 static direction d;
@@ -66,8 +67,7 @@ bool moveTurtle(QPointF & pos_) {
       place.ya = pos_.y();
       place.xb = pos_.x();
       place.yb = pos_.y();
-      ROS_INFO("Move");
-
+      
       switch (d) {
       case right:
            place.xb += 1;
@@ -103,19 +103,27 @@ bool moveTurtle(QPointF & pos_) {
         /*If there is a clear space and the turtle is not finished, this function moves
           it forward one step.*/
         if (m.stepAllowed == true && m.finished == false) {
-            ROS_INFO("Step");
+            
             switch (d) {
             case left:
                  pos_.setY(pos_.y() + 1);
+		 m.numVisits = incrementVisits(d);
+     		 displayTurtle(d, m.numVisits);
                  break;
             case down:
                  pos_.setX(pos_.x() + 1);
+		 m.numVisits = incrementVisits(d);
+     		 displayTurtle(d, m.numVisits);
                  break;
             case right:
                  pos_.setY(pos_.y() - 1);
+		 m.numVisits = incrementVisits(d);
+     		 displayTurtle(d, m.numVisits);
                  break;
             case up:
                  pos_.setX(pos_.x() - 1);
+		 m.numVisits = incrementVisits(d);
+     		 displayTurtle(d, m.numVisits);
                  break;
             default:
                  ROS_ERROR("stepAllowed & finished: step error");
@@ -132,8 +140,8 @@ bool moveTurtle(QPointF & pos_) {
       m.countdown -= 1;
     }
     // display the turtle -- must call this function before returning!
-    displayTurtle(d);
-    ROS_INFO("Display");
+    displayTurtle(d, m.numVisits);
     return (m.finished);
 }
+
 
