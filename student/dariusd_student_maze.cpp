@@ -107,22 +107,22 @@ bool moveTurtle(QPointF & pos_) {
             switch (d) {
             case left:
                  pos_.setY(pos_.y() + 1);
-		 m.numVisits = incrementVisits(d);
+		 m.numVisits = getNumVisits();
      		 displayTurtle(d, m.numVisits);
                  break;
             case down:
                  pos_.setX(pos_.x() + 1);
-		 m.numVisits = incrementVisits(d);
+		 m.numVisits = getNumVisits();
      		 displayTurtle(d, m.numVisits);
                  break;
             case right:
                  pos_.setY(pos_.y() - 1);
-		 m.numVisits = incrementVisits(d);
+		 m.numVisits = getNumVisits();
      		 displayTurtle(d, m.numVisits);
                  break;
             case up:
                  pos_.setX(pos_.x() - 1);
-		 m.numVisits = incrementVisits(d);
+		 m.numVisits = getNumVisits();
      		 displayTurtle(d, m.numVisits);
                  break;
             default:
