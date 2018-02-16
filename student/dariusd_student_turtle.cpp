@@ -127,7 +127,6 @@ void incrementVisits(int dir){
             break;
     }
     v = visits[x][y];
-    //return v;
 }
 
 int getNumVisits(){
