@@ -47,7 +47,7 @@ typedef struct miscellaneous {
     bool moving;
     bool bumped;
     int countdown;
-    const int TIMEOUT = 17; // bigger number slows down simulation so you can see what's happening
+    const int TIMEOUT = 10; // bigger number slows down simulation so you can see what's happening
     int numVisits = 0;
 }misc;
 
@@ -107,22 +107,22 @@ bool moveTurtle(QPointF & pos_) {
             switch (d) {
             case left:
                  pos_.setY(pos_.y() + 1);
-		 m.numVisits = getNumVisits();
+		 m.numVisits = incrementVisits(d);
      		 displayTurtle(d, m.numVisits);
                  break;
             case down:
                  pos_.setX(pos_.x() + 1);
-		 m.numVisits = getNumVisits();
+		 m.numVisits = incrementVisits(d);
      		 displayTurtle(d, m.numVisits);
                  break;
             case right:
                  pos_.setY(pos_.y() - 1);
-		 m.numVisits = getNumVisits();
+		 m.numVisits = incrementVisits(d);
      		 displayTurtle(d, m.numVisits);
                  break;
             case up:
                  pos_.setX(pos_.x() - 1);
-		 m.numVisits = getNumVisits();
+		 m.numVisits = incrementVisits(d);
      		 displayTurtle(d, m.numVisits);
                  break;
             default:

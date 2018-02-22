@@ -88,7 +88,7 @@ void resultedInBump(bool bump) {
 	b = bump;
 }
 
-void incrementVisits(int dir){
+int incrementVisits(int dir){
     switch((direction)dir){
         case up:
         if (x>0){
@@ -127,10 +127,12 @@ void incrementVisits(int dir){
             break;
     }
     v = visits[x][y];
+    return v;
 }
 
 int getNumVisits(){
-  return v;
+    ROS_INFO("Turtle: getNumVisits v = %i", v);
+    return v;
 }
 
 /*The functions upBump() - rightBump() each change the orientation of the turtle respective to its orientation
@@ -162,7 +164,6 @@ int upBump(bool bumped){
          ROS_ERROR("Up case: undefined state");
          break;
   }
-  incrementVisits(d);
   return d;
 }
 
@@ -192,7 +193,6 @@ int leftBump(bool bumped){
        ROS_ERROR("Left case: undefined state");
        break;
   }
-  incrementVisits(d);
  return d;
 }
 
@@ -222,7 +222,6 @@ int downBump(bool bumped){
        ROS_ERROR("Down case: undefined state");
        break;
   }
-  incrementVisits(d);
  return d;
 }
 
@@ -252,6 +251,5 @@ int rightBump(bool bumped){
        ROS_ERROR("Right case: undefined state");
        break;
   }
- incrementVisits(d);
  return d;
 }
